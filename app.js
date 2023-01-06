@@ -7,7 +7,8 @@ var logger = require("morgan");
 var todosRouter = require("./routes/todos");
 
 var app = express();
-expressOasGenerator.init(app, {});
+expressOasGenerator.handleResponses(app, {});
+// expressOasGenerator.init(app, {});
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -16,5 +17,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/todos", todosRouter);
+expressOasGenerator.handleRequests(app, {});
 
 module.exports = app;
