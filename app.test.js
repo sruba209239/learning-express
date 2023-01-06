@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { response } = require("./app");
+// const { response } = require("./app");
 const app = require("./app");
 /*
 Todo api
@@ -96,6 +96,36 @@ describe("Todos API", () => {
           );
         })
     );
+  });
+
+  it("PUT /todos/{id} => Todo Updated!", () => {
+    return (
+      request(app)
+        .put("/todos/123")
+        .send({
+          id: 123,
+          name: "watch avatar 2",
+          targetDate: new Date(),
+          done: true,
+        })
+        // .expect("Content-Type", /json/)
+        // .expect("Location", "/121")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual(
+            expect.objectContaining({
+              id: 123,
+              name: expect.any(String),
+              targetDate: expect.any(String),
+              done: expect.any(Boolean),
+            })
+          );
+        })
+    );
+  });
+
+  it("PUT /todos/{id} => Todo not found", () => {
+    return request(app).put("/todos/1234").expect(404);
   });
 
   it("DELETE /todos/{id} => Todo Deleted!", () => {

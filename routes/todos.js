@@ -3,6 +3,7 @@ var router = express.Router();
 var createError = require("http-errors");
 
 const todos = [{ id: 123, name: "helloo", targetDate: new Date(), done: true }];
+
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   // res.send("respond with a resource");
@@ -41,8 +42,23 @@ router.post("/", function (req, res, next) {
     });
 });
 
+router.put("/:id", function (req, res, next) {
+  const result = todos.find((todo) => todo.id === Number(req.params.id));
+  if (!result) {
+    return next(
+      createError(404, "No todo found to update", {
+        error: "No todo found to update",
+      })
+    );
+  }
+
+  todos.pop();
+  todos.push(req.body);
+  res.json(req.body);
+});
+
 router.delete("/:id", function (req, res, next) {
-  const result = todos.find((todo) => todo.id === +req.params.id);
+  const result = todos.find((todo) => todo.id === Number(req.params.id));
   if (!result) {
     return next(
       createError(404, "No todo found to delete", {
@@ -50,7 +66,8 @@ router.delete("/:id", function (req, res, next) {
       })
     );
   }
-  res.status(204);
+  todos.pop();
+  res.status(204).end();
 });
 
 module.exports = router;
